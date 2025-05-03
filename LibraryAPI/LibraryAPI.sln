@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryAPI", "LibraryAPI\LibraryAPI.csproj", "{75BA4154-71B5-4C60-9A25-3F7E5EC3A3A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryUnitTest", "LibraryUnitTest\LibraryUnitTest.csproj", "{B657200C-ADBA-4548-9636-892F14797DC5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{75BA4154-71B5-4C60-9A25-3F7E5EC3A3A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75BA4154-71B5-4C60-9A25-3F7E5EC3A3A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75BA4154-71B5-4C60-9A25-3F7E5EC3A3A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75BA4154-71B5-4C60-9A25-3F7E5EC3A3A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B657200C-ADBA-4548-9636-892F14797DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B657200C-ADBA-4548-9636-892F14797DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B657200C-ADBA-4548-9636-892F14797DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B657200C-ADBA-4548-9636-892F14797DC5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {34726087-51A1-4115-9142-DB6C2BD8582A}
+	EndGlobalSection
+EndGlobal
