@@ -48,6 +48,11 @@ public class BookService : IBookService
         {
             return Result<BookResponse>.Failure("Available can't bigger quantity", StatusCodes.Status400BadRequest);
         }
+
+        if(request.AvailableQuantity != request.Quantity)
+        {
+            return Result<BookResponse>.Failure("Available must equal quantity", StatusCodes.Status400BadRequest);
+        }
         
         var book = request.ToBookAdd();
         var result = await _bookRepository.CreateAsync(book);
