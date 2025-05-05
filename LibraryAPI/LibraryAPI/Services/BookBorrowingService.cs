@@ -6,8 +6,6 @@ using LibraryAPI.Extensions;
 using LibraryAPI.Helpers;
 using LibraryAPI.IRepository;
 using LibraryAPI.IServices;
-using System.Text;
-using System.IO;
 
 namespace LibraryAPI.Services;
 
@@ -30,14 +28,23 @@ public class BookBorrowingService : IBookBorrowingService
         _emailService = emailService;
     }
 
-    public async Task<PaginatedList<BorrowingResponse>> GetAllBorrowingRequestsAsync(int pageIndex, int pageSize)
+    public async Task<PaginatedList<BorrowingResponse>> GetAllBorrowingRequestsAsync(int pageIndex, int pageSize, Status? status = null)
     {
-        var requests = _bookBorrowingRepository.GetAll().OrderByDescending(r => r.RequestDate);
-        var requestResponse = requests.Select(request => request.ToBorrowingResponse());
+        var requests = _bookBorrowingRepository.GetAll();
+
+        if (status.HasValue)
+        {
+            requests = requests.Where(r => r.Status == status.Value);
+        }
+
+        //var requests = _bookBorrowingRepository.GetAll().OrderByDescending(r => r.RequestDate);
+        var orderedRequests = requests.OrderByDescending(r => r.RequestDate);
+
+        var requestResponse = orderedRequests.Select(request => request.ToBorrowingResponse());
         return await PaginatedList<BorrowingResponse>.CreateAsync(requestResponse, pageIndex, pageSize);
     }
     
-    public async Task<Result<PaginatedList<BorrowingResponse>>> GetUserBorrowingRequestsAsync(Guid userId, int pageIndex, int pageSize)
+    public async Task<Result<PaginatedList<BorrowingResponse>>> GetUserBorrowingRequestsAsync(Guid userId, int pageIndex, int pageSize, Status? status = null)
     {
         // Validate user exists
         var user = await _userRepository.GetByIdAsync(userId);
@@ -47,6 +54,10 @@ public class BookBorrowingService : IBookBorrowingService
         }
     
         var requests = _bookBorrowingRepository.GetByUserId(userId);
+        if (status.HasValue)
+        {
+            requests = requests.Where(r => r.Status == status.Value);
+        }
         var responseList = requests.Select(request => request.ToBorrowingResponse());
         var paginatedList = await PaginatedList<BorrowingResponse>.CreateAsync(responseList, pageIndex, pageSize);
         return Result<PaginatedList<BorrowingResponse>>.Success(paginatedList);

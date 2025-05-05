@@ -20,18 +20,18 @@ public class BookBorrowingController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetAllBorrowingRequests(int pageIndex = 1, int pageSize = 10)
+    public async Task<IActionResult> GetAllBorrowingRequests(int pageIndex = 1, int pageSize = 10, Status? status = null)
     {
-        var requests = await _bookBorrowingService.GetAllBorrowingRequestsAsync(pageIndex, pageSize);
+        var requests = await _bookBorrowingService.GetAllBorrowingRequestsAsync(pageIndex, pageSize, status);
         return Ok(requests);
     }
     
     [HttpGet("my-requests")]
     [Authorize(Roles = "User")]
-    public async Task<IActionResult> GetMyBorrowingRequests(int pageIndex = 1, int pageSize = 10)
+    public async Task<IActionResult> GetMyBorrowingRequests(int pageIndex = 1, int pageSize = 10, Status? status = null)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty);
-        var result = await _bookBorrowingService.GetUserBorrowingRequestsAsync(userId, pageIndex, pageSize);
+        var result = await _bookBorrowingService.GetUserBorrowingRequestsAsync(userId, pageIndex, pageSize, status);
         return result.IsSuccess ? Ok(result.Value) : StatusCode(result.StatusCode ?? StatusCodes.Status500InternalServerError, new { Error = result.ErrorMessage });
     }
     

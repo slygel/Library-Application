@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
-import {CheckCircle, ChevronDown, Loader2, XCircle} from "lucide-react"
+import {CheckCircle, ChevronDown, Clock, LayoutGrid, Loader2, XCircle} from "lucide-react"
 import {BorrowingResponse} from "../types/Book.ts"
 import { useAuth } from "../contexts/AuthContext.tsx"
 import { toast } from "react-toastify"
-import { getAllBorrowingRequests, getMyBorrowingRequests, approveBorrowingRequest, rejectBorrowingRequest } from "../services/BookBorrowingService.ts"
+import { getAllBorrowingRequests, getMyBorrowingRequests, approveBorrowingRequest, rejectBorrowingRequest, Status } from "../services/BookBorrowingService.ts"
 
 const BorrowingRequests = () => {
     const { isAdmin } = useAuth()
-    const [activeTab, setActiveTab] = useState<"pending" | "processed">("pending")
+    const [activeStatus, setActiveStatus] = useState<Status | 'all'>(Status.Waiting)
     const [borrowingResponse, setBorrowingResponse] = useState<BorrowingResponse[]>([])
     const [loading, setLoading] = useState(true)
     const [pageIndex, setPageIndex] = useState(1)
@@ -20,14 +20,15 @@ const BorrowingRequests = () => {
 
     useEffect(() => {
         fetchBorrowingResponse()
-    }, [pageIndex, pageSize])
+    }, [pageIndex, pageSize, activeStatus])
 
     const fetchBorrowingResponse = async () => {
         try {
             setLoading(true)
+            const status = activeStatus === 'all' ? undefined : activeStatus;
             const response = isAdmin()
-                ? await getAllBorrowingRequests(pageIndex, pageSize)
-                : await getMyBorrowingRequests(pageIndex, pageSize)
+                ? await getAllBorrowingRequests(pageIndex, pageSize, status)
+                : await getMyBorrowingRequests(pageIndex, pageSize, status)
 
             setBorrowingResponse(response.items)
             setTotalPages(response.totalPages)
@@ -90,14 +91,12 @@ const BorrowingRequests = () => {
 
     const getStatusDisplay = (status: number) => {
         switch (status) {
-            case 1:
+            case Status.Approved:
                 return "Approved";
-            case 2:
+            case Status.Rejected:
                 return "Rejected";
-            case 3:
+            case Status.Waiting:
                 return "Waiting";
-            case 4:
-                return "Returned";
             default:
                 return status;
         }
@@ -105,14 +104,12 @@ const BorrowingRequests = () => {
 
     const getStatusClass = (status: number) => {
         switch (status) {
-            case 1:
+            case Status.Approved:
                 return "bg-green-100 text-green-800";
-            case 2:
+            case Status.Rejected:
                 return "bg-red-100 text-red-800";
-            case 3:
+            case Status.Waiting:
                 return "bg-yellow-100 text-yellow-800";
-            case 4:
-                return "bg-blue-100 text-blue-800";
             default:
                 return "bg-gray-100 text-gray-800";
         }
@@ -128,8 +125,42 @@ const BorrowingRequests = () => {
         setPageIndex(newPage)
     }
 
-    const pendingRequests = borrowingResponse.filter((request) => request.status === 3)
-    const processedRequests = borrowingResponse.filter((request) => request.status !== 3)
+    const getButtonClass = (status: Status | 'all') => {
+        // return `cursor-pointer px-4 py-2 rounded-md ${
+        //     activeStatus === status
+        //         ? "bg-blue-100 text-blue-700"
+        //         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+        // }`
+        if (activeStatus === status) {
+            // Active state styling
+            switch (status) {
+                case 'all':
+                    return "cursor-pointer px-4 py-2 rounded-md bg-blue-200 text-blue-800";
+                case Status.Waiting:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-yellow-200 text-yellow-800";
+                case Status.Approved:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-green-200 text-green-800";
+                case Status.Rejected:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-red-200 text-red-800";
+                default:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-blue-100 text-blue-700";
+            }
+        } else {
+            // Inactive state styling
+            switch (status) {
+                case 'all':
+                    return "cursor-pointer px-4 py-2 rounded-md bg-blue-50 text-blue-600 hover:bg-blue-100";
+                case Status.Waiting:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-yellow-50 text-yellow-600 hover:bg-yellow-100";
+                case Status.Approved:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-green-50 text-green-600 hover:bg-green-100";
+                case Status.Rejected:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-red-50 text-red-600 hover:bg-red-100";
+                default:
+                    return "cursor-pointer px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200";
+            }
+        }
+    }
 
     return (
         <div className="max-w-full space-y-6">
@@ -161,25 +192,42 @@ const BorrowingRequests = () => {
                     )}
                 </div>
                 <div className="flex space-x-2">
+
                     <button
-                        onClick={() => setActiveTab("pending")}
-                        className={`cursor-pointer px-4 py-2 rounded-md ${
-                            activeTab === "pending"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-gray-100 text-gray-700"
-                        }`}
+                        onClick={() => setActiveStatus(Status.Waiting)}
+                        className={getButtonClass(Status.Waiting)}
                     >
-                        Pending Requests
+                        <span className="font-medium flex items-center gap-1">
+                            <Clock size={16}/>
+                            Waiting
+                        </span>
                     </button>
                     <button
-                        onClick={() => setActiveTab("processed")}
-                        className={`cursor-pointer px-4 py-2 rounded-md ${
-                            activeTab === "processed"
-                                ? "bg-blue-100 text-blue-700"
-                                : "bg-gray-100 text-gray-700"
-                        }`}
+                        onClick={() => setActiveStatus(Status.Approved)}
+                        className={getButtonClass(Status.Approved)}
                     >
-                        Processed Requests
+                        <span className="font-medium flex items-center gap-1">
+                            <CheckCircle size={16} />
+                            Approved
+                        </span>
+                    </button>
+                    <button
+                        onClick={() => setActiveStatus(Status.Rejected)}
+                        className={getButtonClass(Status.Rejected)}
+                    >
+                        <span className="font-medium flex items-center gap-1">
+                            <XCircle size={16}/>
+                            Rejected
+                        </span>
+                    </button>
+                    <button
+                        onClick={() => setActiveStatus('all')}
+                        className={getButtonClass('all')}
+                    >
+                        <span className="font-medium flex items-center gap-1">
+                            <LayoutGrid size={16} />
+                            Show All
+                        </span>
                     </button>
                 </div>
             </div>
@@ -189,160 +237,98 @@ const BorrowingRequests = () => {
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-900 mx-auto"></div>
                     <p className="mt-2 text-gray-600">Loading requests...</p>
                 </div>
-            ):(
-                <>
-                    {activeTab === "pending" ? (
-                        <div>
-                            {pendingRequests.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">No pending borrowing requests to display.</div>
-                            ) : (
-                                <div className="space-y-4">
-                                    {pendingRequests.map((request) => (
-                                        <div key={request.id} className="border rounded-lg p-4 bg-white">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <div>
-                                                    <p className="text-md text-gray-600">
-                                                        <span className="font-semibold mr-2">Request Date:</span>
-                                                        {formatDate(request.requestDate)}
-                                                    </p>
-                                                    <p className="text-md text-gray-600 ">
-                                                        <span className="font-semibold mr-2">Due Date:</span>
-                                                        {formatDate(request.expirationDate)}
-                                                    </p>
-                                                    <p className="text-md text-gray-600">
-                                                        <span className="font-semibold mr-2">Name:</span>
-                                                        {request.requestor.name}
-                                                    </p>
-                                                </div>
-                                                {isAdmin() && (
-                                                    <div className="flex space-x-2">
-                                                        <button
-                                                            onClick={() => handleApproveRequest(request.id)}
-                                                            disabled={loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting}
-                                                            className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md ${
-                                                                loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting
-                                                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                                                                    : "bg-green-100 text-green-700 hover:bg-green-200"
-                                                            }`}
-                                                        >
-                                                            {loadingRequestIds[request.id]?.approving ? (
-                                                                <Loader2 size={16} className="animate-spin" />
-                                                            ) : (
-                                                                <CheckCircle size={16} />
-                                                            )}
-                                                            {loadingRequestIds[request.id]?.approving ? "Approving..." : "Approve"}
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleRejectRequest(request.id)}
-                                                            disabled={loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting}
-                                                            className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md ${
-                                                                loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting
-                                                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                                                                    : "bg-red-100 text-red-700 hover:bg-red-200"
-                                                            }`}
-                                                        >
-                                                            {loadingRequestIds[request.id]?.rejecting ? (
-                                                                <Loader2 size={16} className="animate-spin" />
-                                                            ) : (
-                                                                <XCircle size={16} />
-                                                            )}
-                                                            {loadingRequestIds[request.id]?.rejecting ? "Rejecting..." : "Reject"}
-                                                        </button>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="border-t pt-4">
-                                                <table className="w-full border-collapse">
-                                                    <thead>
-                                                    <tr className="border-b">
-                                                        <th className="py-2 px-4 text-left font-medium text-gray-600">Borrow Id</th>
-                                                        <th className="py-2 px-4 text-left font-medium text-gray-600">Books</th>
-                                                        <th className="py-2 px-4 text-left font-medium text-gray-600">Status</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr>
-                                                        <td className="py-2 px-4">
-                                                            {request.id.split("-")[0].toUpperCase()}
-                                                        </td>
-                                                        <td className="py-2 px-4">
-                                                            {request.books.map((book) => (
-                                                                <div key={book.id} className="text-sm text-gray-600">
-                                                                    {book.bookTitle}
-                                                                </div>
-                                                            ))}
-                                                        </td>
-                                                        <td className="py-2 px-4">
-                                                    <span
-                                                        className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${getStatusClass(request.status)}`}>
-                                                            {getStatusDisplay(request.status)}
-                                                    </span>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+            ) : (
+                <div>
+                    {borrowingResponse.length === 0 ? (
+                        <div className="text-center py-12 text-gray-500">No borrowing requests to display.</div>
                     ) : (
-                        <div>
-                            {processedRequests.length === 0 ? (
-                                <div className="text-center py-12 text-gray-500">No processed borrowing requests to display.</div>
-                            ) : (
-                                <div className="border rounded-lg overflow-hidden">
-                                    <table className="w-full">
-                                        <thead>
-                                        <tr className="bg-gray-50">
-                                            <th className="text-left py-3 px-4 font-medium text-gray-600">Borrow Id</th>
-                                            <th className="text-left py-3 px-4 font-medium text-gray-600">Books</th>
-                                            <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
-                                            <th className="text-left py-3 px-4 font-medium text-gray-600">Requester</th>
-                                            <th className="text-left py-3 px-4 font-medium text-gray-600">Request Date</th>
-                                            <th className="text-left py-3 px-4 font-medium text-gray-600">Due Date</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {processedRequests.map((request, index) => (
-                                            <tr key={request.id}
-                                                className={`border-t ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
-                                                <td className="py-3 px-4">
-                                                    {request.id.split("-")[0].toUpperCase()}
-                                                </td>
-                                                <td className="py-2 px-4">
-                                                    {request.books.map((book) => (
-                                                        <div key={book.id} className="text-sm text-gray-600">
-                                                            {book.bookTitle}
-                                                        </div>
-                                                    ))}
-                                                </td>
-                                                <td className="py-3 px-4">
-                                            <span
-                                                className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${getStatusClass(request.status)}`}>
+                        <div className="border rounded-lg overflow-hidden">
+                            <table className="w-full">
+                                <thead>
+                                <tr className="bg-gray-50">
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Borrow Id</th>
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Books</th>
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Requester</th>
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Request Date</th>
+                                    <th className="text-left py-3 px-4 font-medium text-gray-600">Due Date</th>
+                                    {isAdmin() && activeStatus === Status.Waiting && (
+                                        <th className="text-left py-3 px-4 font-medium text-gray-600">Actions</th>
+                                    )}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {borrowingResponse.map((request, index) => (
+                                    <tr key={request.id}
+                                        className={`border-t ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                                        <td className="py-3 px-4">
+                                            {request.id.split("-")[0].toUpperCase()}
+                                        </td>
+                                        <td className="py-2 px-4">
+                                            {request.books.map((book) => (
+                                                <div key={book.id} className="text-sm text-gray-600">
+                                                    {book.bookTitle}
+                                                </div>
+                                            ))}
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${getStatusClass(request.status)}`}>
                                                 {getStatusDisplay(request.status)}
                                             </span>
-                                                </td>
-                                                <td className="py-3 px-4">
-                                                    {request.requestor.name}
-                                                </td>
-                                                <td className="py-3 px-4">{formatDate(request.requestDate)}</td>
-                                                <td className="py-3 px-4">
-                                                    {formatDate(request.expirationDate)}
-                                                </td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            {request.requestor.name}
+                                        </td>
+                                        <td className="py-3 px-4">{formatDate(request.requestDate)}</td>
+                                        <td className="py-3 px-4">
+                                            {formatDate(request.expirationDate)}
+                                        </td>
+                                        {isAdmin() && activeStatus === Status.Waiting && (
+                                            <td className="py-3 px-4">
+                                                <div className="flex space-x-2">
+                                                    <button
+                                                        onClick={() => handleApproveRequest(request.id)}
+                                                        disabled={loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting}
+                                                        className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md ${
+                                                            loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting
+                                                                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                                                : "bg-green-100 text-green-700 hover:bg-green-200"
+                                                        }`}
+                                                    >
+                                                        {loadingRequestIds[request.id]?.approving ? (
+                                                            <Loader2 size={16} className="animate-spin" />
+                                                        ) : (
+                                                            <CheckCircle size={16} />
+                                                        )}
+                                                        {loadingRequestIds[request.id]?.approving ? "Approving..." : "Approve"}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleRejectRequest(request.id)}
+                                                        disabled={loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting}
+                                                        className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md ${
+                                                            loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting
+                                                                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                                                                : "bg-red-100 text-red-700 hover:bg-red-200"
+                                                        }`}
+                                                    >
+                                                        {loadingRequestIds[request.id]?.rejecting ? (
+                                                            <Loader2 size={16} className="animate-spin" />
+                                                        ) : (
+                                                            <XCircle size={16} />
+                                                        )}
+                                                        {loadingRequestIds[request.id]?.rejecting ? "Rejecting..." : "Reject"}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        )}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
                         </div>
                     )}
-                </>
+                </div>
             )}
-
-
 
             {/* Pagination */}
             {totalPages > 1 && (

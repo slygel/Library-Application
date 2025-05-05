@@ -4,6 +4,5 @@ public enum Status
 {
     Approved = 1,
     Rejected = 2,
-    Waiting = 3,
-    Returned = 4
+    Waiting = 3
 }
