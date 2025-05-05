@@ -4,5 +4,5 @@ namespace LibraryAPI.IServices;
 
 public interface IStatisticsService
 {
-    Task<StatisticsDto> GetStatisticsAsync();
+    Task<StatisticsResponse> GetStatisticsAsync();
 }

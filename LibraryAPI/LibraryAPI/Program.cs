@@ -1,6 +1,6 @@
-using System.Security.Claims;
 using System.Text;
 using LibraryAPI.DbContext;
+using LibraryAPI.Helpers;
 using LibraryAPI.IRepository;
 using LibraryAPI.IServices;
 using LibraryAPI.Repository;
@@ -117,6 +117,10 @@ builder.Services.AddScoped<IBookBorrowingService, BookBorrowingService>();
 
 builder.Services.AddScoped<IStatisticsRepository, StatisticsRepository>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+
+// Configure Email Service
+builder.Services.Configure<EmailSettingsOption>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 var app = builder.Build();
 

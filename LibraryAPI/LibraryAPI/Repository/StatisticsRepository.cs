@@ -14,13 +14,13 @@ public class StatisticsRepository : IStatisticsRepository
         _context = context;
     }
     
-    public async Task<StatisticsDto> GetStatisticsAsync()
+    public async Task<StatisticsResponse> GetStatisticsAsync()
     {
         var totalBooks = await _context.Books.CountAsync();
         var totalCategories = await _context.Categories.CountAsync();
         var totalUsers = await _context.Users.CountAsync() - 1;
 
-        return new StatisticsDto
+        return new StatisticsResponse
         {
             TotalBooks = totalBooks,
             TotalCategories = totalCategories,

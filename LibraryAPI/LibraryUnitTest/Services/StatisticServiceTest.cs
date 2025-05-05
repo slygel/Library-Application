@@ -9,7 +9,7 @@ namespace LibraryUnitTest.Services
     {
         private Mock<IStatisticsRepository> _mockStatisticsRepository;
         private StatisticsService _statisticsService;
-        private StatisticsDto _testStatistics;
+        private StatisticsResponse _testStatistics;
 
         [SetUp]
         public void Setup()
@@ -18,7 +18,7 @@ namespace LibraryUnitTest.Services
             _statisticsService = new StatisticsService(_mockStatisticsRepository.Object);
 
             // Setup test statistics
-            _testStatistics = new StatisticsDto
+            _testStatistics = new StatisticsResponse
             {
                 TotalBooks = 100,
                 TotalCategories = 10,
@@ -50,7 +50,7 @@ namespace LibraryUnitTest.Services
         public async Task GetStatisticsAsync_ShouldReturnEmptyStatistics_WhenRepositoryReturnsEmpty()
         {
             // Arrange
-            var emptyStatistics = new StatisticsDto
+            var emptyStatistics = new StatisticsResponse
             {
                 TotalBooks = 0,
                 TotalCategories = 0,

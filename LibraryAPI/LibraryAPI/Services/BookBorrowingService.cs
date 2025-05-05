@@ -6,6 +6,8 @@ using LibraryAPI.Extensions;
 using LibraryAPI.Helpers;
 using LibraryAPI.IRepository;
 using LibraryAPI.IServices;
+using System.Text;
+using System.IO;
 
 namespace LibraryAPI.Services;
 
@@ -14,15 +16,18 @@ public class BookBorrowingService : IBookBorrowingService
     private readonly IBookBorrowingRepository _bookBorrowingRepository;
     private readonly IBookRepository _bookRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IEmailService _emailService;
 
     public BookBorrowingService(
         IBookBorrowingRepository bookBorrowingRepository,
         IBookRepository bookRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository,
+        IEmailService emailService)
     {
         _bookBorrowingRepository = bookBorrowingRepository;
         _bookRepository = bookRepository;
         _userRepository = userRepository;
+        _emailService = emailService;
     }
 
     public async Task<PaginatedList<BorrowingResponse>> GetAllBorrowingRequestsAsync(int pageIndex, int pageSize)
@@ -170,6 +175,9 @@ public class BookBorrowingService : IBookBorrowingService
         var updatedRequest = _bookBorrowingRepository.UpdateStatus(borrowingRequest);
         var response = updatedRequest.ToBookBorrowingResponse();
 
+        // Send notification email to requestor
+        await SendStatusUpdateEmailAsync(borrowingRequest);
+
         await _bookRepository.SaveChangesAsync();
         await _bookBorrowingRepository.SaveChangesAsync();
         return Result<RequestBorrowingResponse>.Success(response);
@@ -185,5 +193,30 @@ public class BookBorrowingService : IBookBorrowingService
         
         var monthlySummary = await _bookBorrowingRepository.GetCountForUserInCurrentMonthAsync(user.Id);
         return Result<int>.Success(monthlySummary);
+    }
+
+    private async Task SendStatusUpdateEmailAsync(BookBorrowingRequest request)
+    {
+        // Get the requestor
+        var requestor = await _userRepository.GetByIdAsync(request.RequestorId);
+        if (requestor == null || string.IsNullOrEmpty(requestor.Email))
+        {
+            return;
+        }
+
+        string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates", "RequestStatus.html");
+        string emailTemplate = await File.ReadAllTextAsync(templatePath);
+
+        // Replace template placeholders with actual values
+        string emailBody = emailTemplate
+            .Replace("@Model.RequestId", request.Id.ToString().Split("-")[0].ToUpper())
+            .Replace("@Model.Name", requestor.Name)
+            .Replace("@Model.Status", request.Status.ToString())
+            .Replace("@Model.RequestDate", request.RequestDate.ToString("dd/MM/yyyy"));
+
+        string subject = $"Book Borrowing Request Status: {request.Status}";
+
+        // Send email
+        await _emailService.SendMailAsync(requestor.Email, subject, emailBody);
     }
 } 

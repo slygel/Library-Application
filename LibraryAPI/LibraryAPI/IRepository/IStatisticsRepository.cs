@@ -4,5 +4,5 @@ namespace LibraryAPI.IRepository;
 
 public interface IStatisticsRepository
 {
-    Task<StatisticsDto> GetStatisticsAsync();
+    Task<StatisticsResponse> GetStatisticsAsync();
 }

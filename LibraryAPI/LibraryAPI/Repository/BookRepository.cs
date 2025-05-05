@@ -16,18 +16,18 @@ public class BookRepository : IBookRepository
 
     public IQueryable<Book> GetAll(string? bookTitle = null, Guid? categoryId = null)
     {
-        var query = _context.Books.AsNoTracking();
-        
+        var query = _context.Books.AsQueryable();
+
         if (!string.IsNullOrWhiteSpace(bookTitle))
         {
-            query = query.Where(b => b.Title.Contains(bookTitle));
+            query = query.Where(b => b.Title.Contains(bookTitle.Trim().ToLower()));
         }
-        
+
         if (categoryId.HasValue)
         {
             query = query.Where(b => b.CategoryId == categoryId.Value);
         }
-        
+
         return query;
     }
 

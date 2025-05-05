@@ -13,7 +13,7 @@ public class StatisticsService : IStatisticsService
         _statisticsRepository = statisticsRepository;
     }
 
-    public async Task<StatisticsDto> GetStatisticsAsync()
+    public async Task<StatisticsResponse> GetStatisticsAsync()
     {
         return await _statisticsRepository.GetStatisticsAsync();
     }

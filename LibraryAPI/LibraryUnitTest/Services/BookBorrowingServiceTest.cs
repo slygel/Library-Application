@@ -2,6 +2,7 @@
 using LibraryAPI.Entities;
 using LibraryAPI.Enums;
 using LibraryAPI.IRepository;
+using LibraryAPI.IServices;
 using LibraryAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Moq;
@@ -13,6 +14,7 @@ namespace LibraryUnitTest.Services
         private Mock<IBookBorrowingRepository> _mockBookBorrowingRepository;
         private Mock<IBookRepository> _mockBookRepository;
         private Mock<IUserRepository> _mockUserRepository;
+        private Mock<IEmailService> _mockEmailService;
         private BookBorrowingService _bookBorrowingService;
         private User _testUser;
         private User _adminUser;
@@ -25,11 +27,13 @@ namespace LibraryUnitTest.Services
             _mockBookBorrowingRepository = new Mock<IBookBorrowingRepository>();
             _mockBookRepository = new Mock<IBookRepository>();
             _mockUserRepository = new Mock<IUserRepository>();
+            _mockEmailService = new Mock<IEmailService>();
 
             _bookBorrowingService = new BookBorrowingService(
                 _mockBookBorrowingRepository.Object,
                 _mockBookRepository.Object,
-                _mockUserRepository.Object);
+                _mockUserRepository.Object,
+                _mockEmailService.Object);
 
             // Setup test user
             _testUser = new User

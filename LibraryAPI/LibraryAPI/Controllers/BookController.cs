@@ -28,7 +28,7 @@ public class BookController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetCategoryByIdAsync(Guid id)
+    public async Task<IActionResult> GetByIdAsync(Guid id)
     {
         var result = await _bookService.GetByIdAsync(id);
         return result.IsSuccess ? Ok(result.Value) : StatusCode(result.StatusCode ?? StatusCodes.Status500InternalServerError, new { Error = result.ErrorMessage });

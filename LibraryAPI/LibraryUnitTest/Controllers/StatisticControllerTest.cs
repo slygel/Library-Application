@@ -11,7 +11,7 @@ namespace LibraryUnitTest.Controllers
     {
         private Mock<IStatisticsService> _mockStatisticsService;
         private StatisticsController _controller;
-        private StatisticsDto _statistics;
+        private StatisticsResponse _statistics;
 
         [SetUp]
         public void Setup()
@@ -20,7 +20,7 @@ namespace LibraryUnitTest.Controllers
             _controller = new StatisticsController(_mockStatisticsService.Object);
 
             // Setup test statistics
-            _statistics = new StatisticsDto
+            _statistics = new StatisticsResponse
             {
                 TotalBooks = 50,
                 TotalCategories = 10,
@@ -45,7 +45,7 @@ namespace LibraryUnitTest.Controllers
             Assert.That(okResult!.Value, Is.EqualTo(_statistics));
             Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
 
-            var statisticsResult = okResult.Value as StatisticsDto;
+            var statisticsResult = okResult.Value as StatisticsResponse;
             Assert.That(statisticsResult, Is.Not.Null);
             Assert.That(statisticsResult!.TotalBooks, Is.EqualTo(_statistics.TotalBooks));
             Assert.That(statisticsResult.TotalCategories, Is.EqualTo(_statistics.TotalCategories));
