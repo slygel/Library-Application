@@ -27,7 +27,7 @@ public class BookBorrowingService : IBookBorrowingService
 
     public async Task<PaginatedList<BorrowingResponse>> GetAllBorrowingRequestsAsync(int pageIndex, int pageSize)
     {
-        var requests = _bookBorrowingRepository.GetAll();
+        var requests = _bookBorrowingRepository.GetAll().OrderByDescending(r => r.RequestDate);
         var requestResponse = requests.Select(request => request.ToBorrowingResponse());
         return await PaginatedList<BorrowingResponse>.CreateAsync(requestResponse, pageIndex, pageSize);
     }

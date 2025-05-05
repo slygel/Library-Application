@@ -20,7 +20,7 @@ public class BookService : IBookService
     
     public async Task<PaginatedList<BookResponse>> GetAllAsync(int pageIndex, int pageSize, string? bookTitle = null, Guid? categoryId = null)
     {
-        var books = _bookRepository.GetAll(bookTitle, categoryId);
+        var books = _bookRepository.GetAll(bookTitle, categoryId).OrderByDescending(b => b.PublishDate);
         var bookResponse = books.Select(book => book.ToBookResponse());
         return await PaginatedList<BookResponse>.CreateAsync(bookResponse, pageIndex, pageSize);
     }
@@ -44,6 +44,11 @@ public class BookService : IBookService
             return Result<BookResponse>.Failure("Category not found", StatusCodes.Status404NotFound);
         }
 
+        if (request.PublishDate > DateOnly.FromDateTime(DateTime.UtcNow))
+        {
+            return Result<BookResponse>.Failure("Publish date cannot be in the future", StatusCodes.Status400BadRequest);
+        }
+
         if (request.AvailableQuantity > request.Quantity)
         {
             return Result<BookResponse>.Failure("Available can't bigger quantity", StatusCodes.Status400BadRequest);
@@ -63,23 +68,28 @@ public class BookService : IBookService
         return Result<BookResponse>.Success(bookResponse);
     }
 
-    public async Task<Result<BookResponse?>> UpdateAsync(Guid id, BookRequest request)
+    public async Task<Result<BookResponse>> UpdateAsync(Guid id, BookRequest request)
     {
         var book = await _bookRepository.GetByIdAsync(id);
         if (book == null)
         {
-            return Result<BookResponse?>.Failure("Book not found", StatusCodes.Status404NotFound);
+            return Result<BookResponse>.Failure("Book not found", StatusCodes.Status404NotFound);
         }
-        
+
+        if (request.PublishDate > DateOnly.FromDateTime(DateTime.UtcNow))
+        {
+            return Result<BookResponse>.Failure("Publish date cannot be in the future", StatusCodes.Status400BadRequest);
+        }
+
         if (request.AvailableQuantity > request.Quantity)
         {
-            return Result<BookResponse?>.Failure("Available can't bigger quantity", StatusCodes.Status400BadRequest);
+            return Result<BookResponse>.Failure("Available can't bigger quantity", StatusCodes.Status400BadRequest);
         }
         
         var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
         if (category == null)
         {
-            return Result<BookResponse?>.Failure("Category not found", StatusCodes.Status404NotFound);
+            return Result<BookResponse>.Failure("Category not found", StatusCodes.Status404NotFound);
         }
         
         var updatedBook = request.ToBookUpdate(book);
@@ -88,7 +98,7 @@ public class BookService : IBookService
         var bookResponse = result.ToBookResponse();
         
         await _bookRepository.SaveChangesAsync();
-        return Result<BookResponse?>.Success(bookResponse);
+        return Result<BookResponse>.Success(bookResponse);
     }
 
     public async Task<Result> DeleteByIdAsync(Guid id)

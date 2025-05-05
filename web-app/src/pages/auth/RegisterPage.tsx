@@ -280,7 +280,7 @@ const RegisterPage = () => {
                                         block w-full rounded-md border px-3 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 h-12
                                         ${errors.address ? "border-red-300 focus:border-red-500 focus:ring-red-500" : "border-gray-300 dark:border-gray-600"},
                                     `}
-                                    placeholder="Enter your username"
+                                    placeholder="Enter your address"
                                     disabled={isLoading}
                                 />
                             </div>

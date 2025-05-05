@@ -289,7 +289,7 @@ const BookList = () => {
                                                 <button
                                                     onClick={() => handleBookSelect(book)}
                                                     disabled={!selectedBooks.find(b => b.id === book.id) && selectedBooks.length >= 5 || monthlyBorrowingCount >= 3}
-                                                    className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md text-sm
+                                                    className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm
                                                         ${selectedBooks.find(b => b.id === book.id)
                                                         ? 'bg-blue-100 text-blue-700'
                                                         : selectedBooks.length >= 5 || monthlyBorrowingCount >= 3 

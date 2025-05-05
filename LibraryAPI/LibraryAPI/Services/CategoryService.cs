@@ -47,22 +47,21 @@ public class CategoryService : ICategoryService
         return Result<CategoryResponse>.Success(categoryResponse);
     }
 
-    public async Task<Result<CategoryResponse?>> UpdateAsync(Guid id, CategoryRequest request)
+    public async Task<Result<CategoryResponse>> UpdateAsync(Guid id, CategoryRequest request)
     {
         var category = await _categoryRepository.GetByIdAsync(id);
         if (category == null)
         {
-            return Result<CategoryResponse?>.Failure("Category not found", StatusCodes.Status404NotFound);
+            return Result<CategoryResponse>.Failure("Category not found", StatusCodes.Status404NotFound);
         }
         
-        // var categoryUpdate = request.ToCategoryUpdate(id);
         var categoryUpdate = request.ToCategoryUpdate(category);
         var result = _categoryRepository.Update(categoryUpdate);
         
         var categoryResponse = result.ToCategoryResponse();
 
         await _categoryRepository.SaveChangesAsync();
-        return Result<CategoryResponse?>.Success(categoryResponse);
+        return Result<CategoryResponse>.Success(categoryResponse);
     }
     public async Task<Result> DeleteByIdAsync(Guid id)
     {
