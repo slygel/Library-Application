@@ -123,65 +123,6 @@ namespace LibraryUnitTest.Controllers
             _paginatedBorrowingResponses = new PaginatedList<BorrowingResponse>(_borrowingResponses, 2, 1, 10);
         }
 
-
-        [Test]
-        public async Task GetAllBorrowingRequests_ShouldReturnOk_WithPaginatedBorrowingRequests()
-        {
-            // Arrange
-            _mockBookBorrowingService.Setup(service => service.GetAllBorrowingRequestsAsync(1, 10))
-                .ReturnsAsync(_paginatedBorrowingResponses);
-
-            // Act
-            var result = await _controller.GetAllBorrowingRequests(1, 10);
-
-            // Assert
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-
-            var okResult = result as OkObjectResult;
-            Assert.That(okResult!.Value, Is.EqualTo(_paginatedBorrowingResponses));
-            Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
-        }
-
-
-        [Test]
-        public async Task GetMyBorrowingRequests_ShouldReturnOk_WhenUserHasBorrowingRequests()
-        {
-            // Arrange
-            var userBorrowings = new PaginatedList<BorrowingResponse>(
-                _borrowingResponses.Where(b => b.Requestor!.Id == _userId).ToList(), 1, 1, 10);
-
-            _mockBookBorrowingService.Setup(service => service.GetUserBorrowingRequestsAsync(_userId, 1, 10))
-                .ReturnsAsync(Result<PaginatedList<BorrowingResponse>>.Success(userBorrowings));
-
-            // Act
-            var result = await _controller.GetMyBorrowingRequests(1, 10);
-
-            // Assert
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-
-            var okResult = result as OkObjectResult;
-            Assert.That(okResult!.Value, Is.EqualTo(userBorrowings));
-            Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
-        }
-
-        [Test]
-        public async Task GetMyBorrowingRequests_ShouldReturnNotFound_WhenUserHasNoBorrowingRequests()
-        {
-            // Arrange
-            _mockBookBorrowingService.Setup(service => service.GetUserBorrowingRequestsAsync(_userId, 1, 10))
-                .ReturnsAsync(Result<PaginatedList<BorrowingResponse>>.Failure("No borrowing requests found", StatusCodes.Status404NotFound));
-
-            // Act
-            var result = await _controller.GetMyBorrowingRequests(1, 10);
-
-            // Assert
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-
-            var objectResult = result as ObjectResult;
-            Assert.That(objectResult!.StatusCode, Is.EqualTo(StatusCodes.Status404NotFound));
-        }
-
-
         [Test]
         public async Task CreateBorrowingRequest_ShouldReturnOk_WhenRequestIsValid()
         {

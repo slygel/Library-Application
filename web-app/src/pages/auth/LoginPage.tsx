@@ -84,6 +84,8 @@ const LoginPage = () => {
             // Use the authentication context's login function
             isLogin(accessToken, refreshToken);
 
+            toast.success("Login successful!");
+
             // Redirect to homepage
             navigate("/");
         } catch (error) {

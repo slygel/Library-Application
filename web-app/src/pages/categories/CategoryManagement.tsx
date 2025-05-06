@@ -144,32 +144,7 @@ const CategoryManagement = () => {
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center space-x-4">
                         <h3 className="text-xl font-bold text-gray-900">Book Categories</h3>
-                        <div className="relative">
-                            <button
-                                onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
-                                className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
-                            >
-                                <span className={"text-center"}>Show: {pageSize}</span>
-                                <ChevronDown size={16}/>
-                            </button>
-                            {pageSizeDropdownOpen && (
-                                <div
-                                    className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
-                                    <ul className="py-1">
-                                        {pageSizeOptions.map(size => (
-                                            <li key={size}>
-                                                <button
-                                                    onClick={() => handlePageSizeChange(size)}
-                                                    className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
-                                                >
-                                                    {size} items
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
+
                     </div>
                     <button
                         onClick={() => {
@@ -208,7 +183,8 @@ const CategoryManagement = () => {
                                     </tr>
                                 ) : (
                                     categories.map((category, index) => (
-                                        <tr key={category.id} className={`border-t ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                                        <tr key={category.id}
+                                            className={`border-t ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
                                             <td className="py-3 px-4 font-medium">{category.name}</td>
                                             <td className="py-3 px-4 text-gray-600">{category.description}</td>
                                             <td className="py-3 px-4">
@@ -218,14 +194,14 @@ const CategoryManagement = () => {
                                                         className="p-2 text-blue-600 hover:bg-blue-100 rounded"
                                                         aria-label="Edit category"
                                                     >
-                                                        <Pencil size={18} />
+                                                        <Pencil size={18}/>
                                                     </button>
                                                     <button
                                                         onClick={() => confirmDelete(category)}
                                                         className="p-2 text-red-500 hover:bg-red-100 rounded"
                                                         aria-label="Delete category"
                                                     >
-                                                        <Trash2 size={18} />
+                                                        <Trash2 size={18}/>
                                                     </button>
                                                 </div>
                                             </td>
@@ -236,12 +212,41 @@ const CategoryManagement = () => {
                             </table>
                         </div>
 
+
+                        <div className="relative mt-4 flex items-center justify-between">
+                            <button
+                                onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
+                                className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
+                            >
+                                <span className={"text-center"}>Show: {pageSize}</span>
+                                <ChevronDown size={16}/>
+                            </button>
+                            {pageSizeDropdownOpen && (
+                                <div
+                                    className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
+                                    <ul className="py-1">
+                                        {pageSizeOptions.map(size => (
+                                            <li key={size}>
+                                                <button
+                                                    onClick={() => handlePageSizeChange(size)}
+                                                    className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
+                                                >
+                                                    {size} items
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+
                         {/* Pagination */}
                         {totalPages > 1 && (
                             <div className="flex justify-between items-center mt-4">
                                 <div className="text-sm text-gray-600">
                                     Page {pageIndex} of {totalPages}
                                 </div>
+
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => handlePageChange(pageIndex - 1)}
@@ -274,7 +279,8 @@ const CategoryManagement = () => {
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed bg-[rgba(0,0,0,0.5)] inset-0 drop-shadow-xl bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div
+                    className="fixed bg-[rgba(0,0,0,0.5)] inset-0 drop-shadow-xl bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
                         <div className="mb-4">
                             <h3 className="text-xl font-bold text-gray-900">
@@ -297,14 +303,15 @@ const CategoryManagement = () => {
 
             {/* Delete Confirmation Modal */}
             {deleteConfirmOpen && categoryToDelete && (
-                <div className="fixed bg-[rgba(0,0,0,0.5)] inset-0 drop-shadow-xl bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div
+                    className="fixed bg-[rgba(0,0,0,0.5)] inset-0 drop-shadow-xl bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
                         <div className="mb-4">
                             <h3 className="text-xl font-bold text-gray-900">Confirm Deletion</h3>
                         </div>
                         <div className="mb-6">
                             <p className="text-gray-700">
-                                Are you sure you want to delete the category <span className="font-medium">{categoryToDelete.name}</span>?
+                            Are you sure you want to delete the category <span className="font-medium">{categoryToDelete.name}</span>?
                             </p>
                             <p className="text-gray-500 text-sm mt-2">
                                 This action cannot be undone.

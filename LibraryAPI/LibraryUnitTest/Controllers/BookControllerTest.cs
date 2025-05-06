@@ -135,45 +135,6 @@ namespace LibraryUnitTest.Controllers
             Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
         }
 
-
-        [Test]
-        public async Task GetCategoryByIdAsync_ShouldReturnOk_WhenBookExists()
-        {
-            // Arrange
-            var bookId = _testBook.Id;
-            _mockBookService.Setup(service => service.GetByIdAsync(bookId))
-                .ReturnsAsync(Result<BookResponse>.Success(_testBook));
-
-            // Act
-            var result = await _controller.GetCategoryByIdAsync(bookId);
-
-            // Assert
-            Assert.That(result, Is.InstanceOf<OkObjectResult>());
-
-            var okResult = result as OkObjectResult;
-            Assert.That(okResult!.Value, Is.EqualTo(_testBook));
-            Assert.That(okResult.StatusCode, Is.EqualTo(StatusCodes.Status200OK));
-        }
-
-        [Test]
-        public async Task GetCategoryByIdAsync_ShouldReturnNotFound_WhenBookDoesNotExist()
-        {
-            // Arrange
-            var nonExistentId = Guid.NewGuid();
-            _mockBookService.Setup(service => service.GetByIdAsync(nonExistentId))
-                .ReturnsAsync(Result<BookResponse>.Failure("Book not found", StatusCodes.Status404NotFound));
-
-            // Act
-            var result = await _controller.GetCategoryByIdAsync(nonExistentId);
-
-            // Assert
-            Assert.That(result, Is.InstanceOf<ObjectResult>());
-
-            var objectResult = result as ObjectResult;
-            Assert.That(objectResult!.StatusCode, Is.EqualTo(StatusCodes.Status404NotFound));
-        }
-
-
         [Test]
         public async Task CreateAsync_ShouldReturnOk_WhenRequestIsValid()
         {

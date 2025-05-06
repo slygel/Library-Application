@@ -98,7 +98,6 @@ const BookList = () => {
         setSelectedCategory(categoryId)
         setPageIndex(1)
         setSearchTerm("")
-        fetchBooks()
     }
 
     const handleSearch = (e: React.FormEvent) => {
@@ -206,31 +205,6 @@ const BookList = () => {
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center space-x-4">
                         <h3 className="text-xl font-bold text-gray-900">Available Books</h3>
-                        <div className="relative">
-                            <button
-                                onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
-                                className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
-                            >
-                                <span>Show: {pageSize}</span>
-                                <ChevronDown size={16} />
-                            </button>
-                            {pageSizeDropdownOpen && (
-                                <div className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
-                                    <ul className="py-1">
-                                        {pageSizeOptions.map(size => (
-                                            <li key={size}>
-                                                <button
-                                                    onClick={() => handlePageSizeChange(size)}
-                                                    className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
-                                                >
-                                                    {size} items
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
                     </div>
 
                     {searchTerm && (
@@ -266,51 +240,54 @@ const BookList = () => {
                     </div>
                 ) : (
                     <>
-                    {books.length === 0 ? (
-                        <div className="text-center py-8">
-                            <p className="text-gray-600">
-                                {selectedCategory && categories.find(c => c.id === selectedCategory)?.name
-                                    ? `No books found`
-                                    : "No books found matching your search criteria."}
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                            {books.map((book) => (
-                                <div key={book.id} className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{book.title}</h3>
-                                        <p className="text-gray-600 mb-2">By {book.author}</p>
-                                        <div className="flex justify-between items-center">
-                                            <span className={`text-sm ${book.availableQuantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {books.length === 0 ? (
+                            <div className="text-center py-8">
+                                <p className="text-gray-600">
+                                    {selectedCategory && categories.find(c => c.id === selectedCategory)?.name
+                                        ? `No books found`
+                                        : "No books found matching your search criteria."}
+                                </p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {books.map((book) => (
+                                    <div key={book.id}
+                                         className="border rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="p-4">
+                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">{book.title}</h3>
+                                            <p className="text-gray-600 mb-2">By {book.author}</p>
+                                            <div className="flex justify-between items-center">
+                                            <span
+                                                className={`text-sm ${book.availableQuantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
                                                 {book.availableQuantity > 0 ? `${book.availableQuantity}/${book.quantity || 0} available` : 'Not available'}
                                             </span>
-                                            {isAuthenticated && !isAdmin() && book.availableQuantity > 0 && (
-                                                <button
-                                                    onClick={() => handleBookSelect(book)}
-                                                    disabled={!selectedBooks.find(b => b.id === book.id) && selectedBooks.length >= 5 || monthlyBorrowingCount >= 3}
-                                                    className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm
+                                                {isAuthenticated && !isAdmin() && book.availableQuantity > 0 && (
+                                                    <button
+                                                        onClick={() => handleBookSelect(book)}
+                                                        disabled={!selectedBooks.find(b => b.id === book.id) && selectedBooks.length >= 5 || monthlyBorrowingCount >= 3}
+                                                        className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm
                                                         ${selectedBooks.find(b => b.id === book.id)
-                                                        ? 'bg-blue-100 text-blue-700'
-                                                        : selectedBooks.length >= 5 || monthlyBorrowingCount >= 3 
-                                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                                                            : 'bg-green-100 text-green-700 hover:bg-green-200'
-                                                    }`}
-                                                >
-                                                    <BookOpen size={16} />
-                                                    {selectedBooks.find(b => b.id === book.id) ? 'Selected' : 'Select'}
-                                                </button>
-                                            )}
+                                                            ? 'bg-blue-100 text-blue-700'
+                                                            : selectedBooks.length >= 5 || monthlyBorrowingCount >= 3
+                                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                                : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                                        }`}
+                                                    >
+                                                        <BookOpen size={16}/>
+                                                        {selectedBooks.find(b => b.id === book.id) ? 'Selected' : 'Select'}
+                                                    </button>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                ))}
+                            </div>
+                        )}
 
                         {/* Borrow Modal */}
                         {showBorrowModal && (
-                            <div className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 flex items-center justify-center p-4">
+                            <div
+                                className="fixed inset-0 bg-[rgba(0,0,0,0.5)] bg-opacity-50 flex items-center justify-center p-4">
                                 <div className="bg-white rounded-lg p-6 max-w-md w-full">
                                     <h3 className="text-lg font-semibold mb-4">Confirm Book Selection</h3>
                                     <div className="mb-4">
@@ -355,11 +332,39 @@ const BookList = () => {
                                     onClick={() => setShowBorrowModal(true)}
                                     className="cursor-pointer bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2"
                                 >
-                                    <BookOpen size={20} />
+                                    <BookOpen size={20}/>
                                     Submit Borrow Request ({selectedBooks.length})
                                 </button>
                             </div>
                         )}
+
+                        {/* Page Size Dropdown */}
+                        <div className="relative mt-4 flex items-center justify-between">
+                            <button
+                                onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
+                                className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
+                            >
+                                <span>Show: {pageSize}</span>
+                                <ChevronDown size={16}/>
+                            </button>
+                            {pageSizeDropdownOpen && (
+                                <div
+                                    className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
+                                    <ul className="py-1">
+                                        {pageSizeOptions.map(size => (
+                                            <li key={size}>
+                                                <button
+                                                    onClick={() => handlePageSizeChange(size)}
+                                                    className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
+                                                >
+                                                    {size} items
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
 
                         {/* Pagination controls */}
                         {totalPages > 1 && (

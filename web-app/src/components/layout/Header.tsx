@@ -79,8 +79,7 @@ const Header = () => {
 
                     <div className="hidden md:flex items-center space-x-4">
                         <Link to="/sign-up"
-                          className="flex items-center text-gray-600 hover:text-emerald-600 transition-colors">
-                            <User className="h-5 w-5 mr-1"/>
+                          className="flex items-center text-gray-600 hover:text-emerald-800 transition-colors">
                             <span>Sign Up</span>
                         </Link>
                         <Link

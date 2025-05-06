@@ -111,30 +111,6 @@ namespace LibraryUnitTest.Repository
         }
 
         [Test]
-        public async Task GetByUserIdAsync_ShouldReturnAllUserTokens()
-        {
-            // Act
-            var result = await _repository.GetByUserIdAsync(_testUser.Id);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Count(), Is.EqualTo(3));
-            Assert.That(result.Select(t => t.Token), Does.Contain("valid-token-1"));
-            Assert.That(result.Select(t => t.Token), Does.Contain("expired-token"));
-            Assert.That(result.Select(t => t.Token), Does.Contain("revoked-token"));
-        }
-
-        [Test]
-        public async Task GetByUserIdAsync_ShouldReturnEmptyList_WhenUserHasNoTokens()
-        {
-            // Act
-            var result = await _repository.GetByUserIdAsync(Guid.NewGuid());
-
-            // Assert
-            Assert.That(result, Is.Empty);
-        }
-
-        [Test]
         public async Task CreateAsync_ShouldAddNewRefreshToken()
         {
             // Arrange

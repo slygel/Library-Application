@@ -93,7 +93,7 @@ public class AuthService : IAuthService
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Name = request.Username,
+            Name = request.Name,
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
             Username = request.Username,

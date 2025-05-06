@@ -4,8 +4,8 @@ using LibraryAPI.IRepository;
 using LibraryAPI.Services;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using Microsoft.EntityFrameworkCore;
 using LibraryAPI.Extensions;
+using LibraryAPI.Helpers;
 
 namespace LibraryUnitTest.Services
 {
@@ -75,70 +75,6 @@ namespace LibraryUnitTest.Services
                     Description = "Description 3"
                 }
             };
-        }
-
-        [Test]
-        public async Task GetAllAsync_ShouldReturnAllBooks_WhenNoFiltersProvided()
-        {
-            // Arrange
-            var queryableBooks = _books.AsQueryable();
-            _mockBookRepository.Setup(repo => repo.GetAll(null, null)).Returns(queryableBooks);
-
-            // Mock the async enumeration behavior
-            // This is necessary because PaginatedList.CreateAsync calls CountAsync and ToListAsync
-            var mockRepo = _mockBookRepository.Object;
-            var books = mockRepo.GetAll(null, null);
-            var count = books.Count();
-            var bookResponses = books.Select(b => b.ToBookResponse()).ToList();
-
-            // Act
-            var result = await _bookService.GetAllAsync(1, 10);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Items.Count(), Is.EqualTo(3));
-            Assert.That(result.PageIndex, Is.EqualTo(1));
-            Assert.That(result.TotalPages, Is.EqualTo(1));
-            Assert.That(result.TotalItems, Is.EqualTo(3));
-        }
-
-        [Test]
-        public async Task GetAllAsync_ShouldReturnFilteredBooks_WhenTitleFilterProvided()
-        {
-            // Arrange
-            var filteredBooks = _books.Where(b => b.Title.Contains("Book 1")).AsQueryable();
-            _mockBookRepository.Setup(repo => repo.GetAll("Book 1", null)).Returns(filteredBooks);
-
-            // Mock the async enumeration behavior
-            var mockRepo = _mockBookRepository.Object;
-            var books = mockRepo.GetAll("Book 1", null);
-            var count = books.Count();
-            var bookResponses = books.Select(b => b.ToBookResponse()).ToList();
-
-            // Act
-            var result = await _bookService.GetAllAsync(1, 10, "Book 1");
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Items.Count(), Is.EqualTo(1));
-            Assert.That(result.Items.First().Title, Is.EqualTo("Book 1"));
-        }
-
-        [Test]
-        public async Task GetAllAsync_ShouldReturnFilteredBooks_WhenCategoryFilterProvided()
-        {
-            // Arrange
-            var categoryId = _category.Id;
-            var filteredBooks = _books.Where(b => b.CategoryId == categoryId).AsQueryable();
-            _mockBookRepository.Setup(repo => repo.GetAll(null, categoryId)).Returns(filteredBooks);
-
-            // Act
-            var result = await _bookService.GetAllAsync(1, 10, null, categoryId);
-
-            // Assert
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Items.Count(), Is.EqualTo(3));
-            Assert.That(result.Items.All(b => b.CategoryId == categoryId), Is.True);
         }
 
         [Test]

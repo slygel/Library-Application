@@ -210,11 +210,11 @@ namespace LibraryAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("eead9a20-699f-45c1-aaa3-7e912711b5c2"),
+                            Id = new Guid("6f08ac64-ef82-43af-9a17-c4095397f710"),
                             Address = "Ba Vi, Ha Noi",
                             Email = "nttue03@gmail.com",
                             Name = "Tai Tue",
-                            Password = "jB+di18szrb6LMnrCvKAlQ==:wLeMyCeEyNL6w5gYktu2loyQVVfdBVfFSSDFZnB1ba4=",
+                            Password = "Rrje7eglyVuv7Fkdu478Dg==:3BaZrGse6J7u2/yZut+7O+AYIyAJWjuIMY7YJd9WliA=",
                             PhoneNumber = "0383291503",
                             Role = 1,
                             Username = "admin"

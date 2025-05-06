@@ -254,32 +254,6 @@ const BookManagement = () => {
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex items-center space-x-4">
                         <h3 className="text-xl font-bold text-gray-900">Books Catalog</h3>
-                        <div className="relative">
-                            <button
-                                onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
-                                className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
-                            >
-                                <span>Show: {pageSize}</span>
-                                <ChevronDown size={16}/>
-                            </button>
-                            {pageSizeDropdownOpen && (
-                                <div
-                                    className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
-                                    <ul className="py-1">
-                                        {pageSizeOptions.map(size => (
-                                            <li key={size}>
-                                                <button
-                                                    onClick={() => handlePageSizeChange(size)}
-                                                    className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
-                                                >
-                                                    {size} items
-                                                </button>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
                     </div>
 
                     {isAdmin() && (
@@ -380,6 +354,33 @@ const BookManagement = () => {
                             </table>
                         </div>
 
+                        <div className="relative mt-4 flex items-center justify-between">
+                            <button
+                                onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
+                                className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
+                            >
+                                <span>Show: {pageSize}</span>
+                                <ChevronDown size={16}/>
+                            </button>
+                            {pageSizeDropdownOpen && (
+                                <div
+                                    className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
+                                    <ul className="py-1">
+                                        {pageSizeOptions.map(size => (
+                                            <li key={size}>
+                                                <button
+                                                    onClick={() => handlePageSizeChange(size)}
+                                                    className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
+                                                >
+                                                    {size} items
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+
                         {/* Pagination controls */}
                         {totalPages > 1 && (
                             <div className="flex justify-between items-center mt-4">
@@ -441,7 +442,8 @@ const BookManagement = () => {
 
             {/* Delete Confirmation Modal */}
             {deleteConfirmOpen && bookToDelete && (
-                <div className="fixed bg-[rgba(0,0,0,0.5)] inset-0 drop-shadow-xl bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div
+                    className="fixed bg-[rgba(0,0,0,0.5)] inset-0 drop-shadow-xl bg-opacity-50 flex items-center justify-center p-4 z-50">
                     <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
                         <div className="mb-4">
                             <h3 className="text-xl font-bold text-gray-900">Confirm Deletion</h3>

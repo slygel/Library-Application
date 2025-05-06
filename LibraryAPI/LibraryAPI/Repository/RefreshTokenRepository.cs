@@ -21,13 +21,6 @@ public class RefreshTokenRepository : IRefreshTokenRepository
             .FirstOrDefaultAsync(rt => rt.Token == token);
     }
 
-    public async Task<IEnumerable<RefreshToken>> GetByUserIdAsync(Guid userId)
-    {
-        return await _context.RefreshTokens
-            .Where(rt => rt.UserId == userId)
-            .ToListAsync();
-    }
-
     public async Task CreateAsync(RefreshToken refreshToken)
     {
         await _context.RefreshTokens.AddAsync(refreshToken);

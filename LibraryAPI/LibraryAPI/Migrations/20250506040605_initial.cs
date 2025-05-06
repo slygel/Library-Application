@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace LibraryAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -146,7 +146,7 @@ namespace LibraryAPI.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "Address", "Email", "Name", "Password", "PhoneNumber", "Role", "Username" },
-                values: new object[] { new Guid("eead9a20-699f-45c1-aaa3-7e912711b5c2"), "Ba Vi, Ha Noi", "nttue03@gmail.com", "Tai Tue", "jB+di18szrb6LMnrCvKAlQ==:wLeMyCeEyNL6w5gYktu2loyQVVfdBVfFSSDFZnB1ba4=", "0383291503", 1, "admin" });
+                values: new object[] { new Guid("6f08ac64-ef82-43af-9a17-c4095397f710"), "Ba Vi, Ha Noi", "nttue03@gmail.com", "Tai Tue", "Rrje7eglyVuv7Fkdu478Dg==:3BaZrGse6J7u2/yZut+7O+AYIyAJWjuIMY7YJd9WliA=", "0383291503", 1, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Book_CategoryId",

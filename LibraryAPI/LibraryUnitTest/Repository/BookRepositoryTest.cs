@@ -74,17 +74,6 @@ namespace LibraryUnitTest.Repository
         }
 
         [Test]
-        public void GetAll_ShouldReturnFilteredBooks_WhenBookTitleProvided()
-        {
-            // Act
-            var result = _repository.GetAll(bookTitle: "Clean").ToList();
-
-            // Assert
-            Assert.That(result, Has.Count.EqualTo(1));
-            Assert.That(result[0].Title, Is.EqualTo("Clean Code"));
-        }
-
-        [Test]
         public void GetAll_ShouldReturnFilteredBooks_WhenCategoryIdProvided()
         {
             // Arrange

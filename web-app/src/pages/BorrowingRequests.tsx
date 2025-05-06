@@ -126,11 +126,6 @@ const BorrowingRequests = () => {
     }
 
     const getButtonClass = (status: Status | 'all') => {
-        // return `cursor-pointer px-4 py-2 rounded-md ${
-        //     activeStatus === status
-        //         ? "bg-blue-100 text-blue-700"
-        //         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-        // }`
         if (activeStatus === status) {
             // Active state styling
             switch (status) {
@@ -166,38 +161,13 @@ const BorrowingRequests = () => {
         <div className="max-w-full space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-gray-900">Borrowing Requests</h2>
-                <div className="relative">
-                    <button
-                        onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
-                        className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
-                    >
-                        <span className={"text-center"}>Show: {pageSize}</span>
-                        <ChevronDown size={16}/>
-                    </button>
-                    {pageSizeDropdownOpen && (
-                        <div className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
-                            <ul className="py-1">
-                                {pageSizeOptions.map(size => (
-                                    <li key={size}>
-                                        <button
-                                            onClick={() => handlePageSizeChange(size)}
-                                            className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
-                                        >
-                                            {size} items
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                </div>
                 <div className="flex space-x-2">
 
                     <button
                         onClick={() => setActiveStatus(Status.Waiting)}
                         className={getButtonClass(Status.Waiting)}
                     >
-                        <span className="font-medium flex items-center gap-1">
+                        <span className="flex items-center gap-1">
                             <Clock size={16}/>
                             Waiting
                         </span>
@@ -206,8 +176,8 @@ const BorrowingRequests = () => {
                         onClick={() => setActiveStatus(Status.Approved)}
                         className={getButtonClass(Status.Approved)}
                     >
-                        <span className="font-medium flex items-center gap-1">
-                            <CheckCircle size={16} />
+                        <span className="flex items-center gap-1">
+                            <CheckCircle size={16}/>
                             Approved
                         </span>
                     </button>
@@ -215,7 +185,7 @@ const BorrowingRequests = () => {
                         onClick={() => setActiveStatus(Status.Rejected)}
                         className={getButtonClass(Status.Rejected)}
                     >
-                        <span className="font-medium flex items-center gap-1">
+                        <span className="flex items-center gap-1">
                             <XCircle size={16}/>
                             Rejected
                         </span>
@@ -224,8 +194,8 @@ const BorrowingRequests = () => {
                         onClick={() => setActiveStatus('all')}
                         className={getButtonClass('all')}
                     >
-                        <span className="font-medium flex items-center gap-1">
-                            <LayoutGrid size={16} />
+                        <span className="flex items-center gap-1">
+                            <LayoutGrid size={16}/>
                             Show All
                         </span>
                     </button>
@@ -272,7 +242,8 @@ const BorrowingRequests = () => {
                                             ))}
                                         </td>
                                         <td className="py-3 px-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${getStatusClass(request.status)}`}>
+                                            <span
+                                                className={`px-3 py-1 rounded-full text-xs font-medium uppercase ${getStatusClass(request.status)}`}>
                                                 {getStatusDisplay(request.status)}
                                             </span>
                                         </td>
@@ -289,32 +260,32 @@ const BorrowingRequests = () => {
                                                     <button
                                                         onClick={() => handleApproveRequest(request.id)}
                                                         disabled={loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting}
-                                                        className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md ${
+                                                        className={`cursor-pointer font-medium flex items-center gap-1 px-3 py-1 rounded-md ${
                                                             loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting
                                                                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                                                                 : "bg-green-100 text-green-700 hover:bg-green-200"
                                                         }`}
                                                     >
                                                         {loadingRequestIds[request.id]?.approving ? (
-                                                            <Loader2 size={16} className="animate-spin" />
+                                                            <Loader2 size={16} className="animate-spin"/>
                                                         ) : (
-                                                            <CheckCircle size={16} />
+                                                            <CheckCircle size={16}/>
                                                         )}
                                                         {loadingRequestIds[request.id]?.approving ? "Approving..." : "Approve"}
                                                     </button>
                                                     <button
                                                         onClick={() => handleRejectRequest(request.id)}
                                                         disabled={loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting}
-                                                        className={`cursor-pointer flex items-center gap-1 px-3 py-1 rounded-md ${
+                                                        className={`cursor-pointer font-medium flex items-center gap-1 px-3 py-1 rounded-md ${
                                                             loadingRequestIds[request.id]?.approving || loadingRequestIds[request.id]?.rejecting
                                                                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                                                                 : "bg-red-100 text-red-700 hover:bg-red-200"
                                                         }`}
                                                     >
                                                         {loadingRequestIds[request.id]?.rejecting ? (
-                                                            <Loader2 size={16} className="animate-spin" />
+                                                            <Loader2 size={16} className="animate-spin"/>
                                                         ) : (
-                                                            <XCircle size={16} />
+                                                            <XCircle size={16}/>
                                                         )}
                                                         {loadingRequestIds[request.id]?.rejecting ? "Rejecting..." : "Reject"}
                                                     </button>
@@ -329,6 +300,33 @@ const BorrowingRequests = () => {
                     )}
                 </div>
             )}
+
+            <div className="relative flex items-center justify-between mt-6">
+                <button
+                    onClick={() => setPageSizeDropdownOpen(!pageSizeDropdownOpen)}
+                    className="flex items-center space-x-1 text-sm text-gray-600 border border-gray-300 rounded-md px-2 py-1 hover:bg-gray-50 w-25 justify-center"
+                >
+                    <span className={"text-center"}>Show: {pageSize}</span>
+                    <ChevronDown size={16}/>
+                </button>
+                {pageSizeDropdownOpen && (
+                    <div
+                        className="absolute top-full left-0 mt-1 bg-white shadow-lg rounded-md border border-gray-200 z-10 w-25">
+                        <ul className="py-1">
+                            {pageSizeOptions.map(size => (
+                                <li key={size}>
+                                    <button
+                                        onClick={() => handlePageSizeChange(size)}
+                                        className={`w-full text-left px-4 py-2 text-sm ${pageSize === size ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-50'}`}
+                                    >
+                                        {size} items
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+            </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
