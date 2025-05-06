@@ -188,7 +188,7 @@ const BookList = () => {
                                 id="search"
                                 type="text"
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                                placeholder="Search by title or author"
+                                placeholder="Search by title"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
@@ -327,10 +327,10 @@ const BookList = () => {
 
                         {/* Submit Button */}
                         {isAuthenticated && !isAdmin() && selectedBooks.length > 0 && (
-                            <div className="fixed bottom-6 right-6">
+                            <div className="fixed top-20 right-6">
                                 <button
                                     onClick={() => setShowBorrowModal(true)}
-                                    className="cursor-pointer bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2"
+                                    className="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-900 flex items-center gap-2 z-1000"
                                 >
                                     <BookOpen size={20}/>
                                     Submit Borrow Request ({selectedBooks.length})

@@ -237,7 +237,7 @@ const BookManagement = () => {
                                 id="search"
                                 type="text"
                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                                placeholder="Search by title or author"
+                                placeholder="Search by title"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />

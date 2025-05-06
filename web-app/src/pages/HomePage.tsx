@@ -4,7 +4,6 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import {useEffect, useState} from "react";
 import {getStatistic, Statistic} from "../services/Statistic.ts";
-
 const HomePage = () => {
 
     const [statistics, setStatistics] = useState<Statistic>({
@@ -46,9 +45,9 @@ const HomePage = () => {
                                         one place.
                                     </p>
                                 </div>
-                                <div className="md:w-1/2 flex justify-center transition-opacity duration-500 opacity-50">
+                                <div className="md:w-1/2 flex justify-center transition-opacity duration-500">
                                     <img
-                                        src={"https://play-lh.googleusercontent.com/0oB0oc9AUCG7vN2PQsQ0nvFirKVVqpPp11KLURKCJu9KKJUBr3M96CwKwTZEf6sg4xM"}
+                                        src={"/homepage.png"}
                                         alt={""}
                                         width={"400"}
                                         height={"300"}
