@@ -151,7 +151,7 @@ const CategoryManagement = () => {
                             setEditingCategory(null)
                             setIsModalOpen(true)
                         }}
-                        className="flex items-center gap-2 py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800"
+                        className="flex items-center gap-2 py-2 px-4 bg-green-800 text-white rounded-lg hover:bg-green-900"
                     >
                         <FolderPlus size={18}/>
                         Add Category

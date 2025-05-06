@@ -70,11 +70,11 @@ const CategoryForm = ({onSubmit, initialData = null, onCancel, isEditing = false
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
                 >
                     Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800">
+                <button type="submit" className="px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-900">
                     {isEditing ? "Update Category" : "Add Category"}
                 </button>
             </div>

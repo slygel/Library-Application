@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250506040605_initial")]
+    [Migration("20250506103824_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -136,6 +136,38 @@ namespace LibraryAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Category", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5857df09-3840-4c13-813b-c79e68b4e216"),
+                            Description = "Books that explore futuristic concepts and advanced technologies.",
+                            Name = "Science Fiction"
+                        },
+                        new
+                        {
+                            Id = new Guid("d87aa1bb-8728-4583-a82b-52dc22dfbdbc"),
+                            Description = "Books that contain magical elements and fantastical worlds.",
+                            Name = "Fantasy"
+                        },
+                        new
+                        {
+                            Id = new Guid("2fc5252a-5d8b-4010-9d6d-29e407dbb5d6"),
+                            Description = "Books that involve solving a crime or uncovering secrets.",
+                            Name = "Mystery"
+                        },
+                        new
+                        {
+                            Id = new Guid("91dccd39-e404-446d-9471-53a9d9b07e75"),
+                            Description = "Books that focus on romantic relationships.",
+                            Name = "Romance"
+                        },
+                        new
+                        {
+                            Id = new Guid("563ed071-f65e-40b0-90d7-b334a8b7f2b3"),
+                            Description = "Books that are based on real events and facts.",
+                            Name = "Non-Fiction"
+                        });
                 });
 
             modelBuilder.Entity("LibraryAPI.Entities.RefreshToken", b =>
@@ -213,11 +245,11 @@ namespace LibraryAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("6f08ac64-ef82-43af-9a17-c4095397f710"),
+                            Id = new Guid("68949424-a4e7-4178-963a-55d3089918d2"),
                             Address = "Ba Vi, Ha Noi",
                             Email = "nttue03@gmail.com",
                             Name = "Tai Tue",
-                            Password = "Rrje7eglyVuv7Fkdu478Dg==:3BaZrGse6J7u2/yZut+7O+AYIyAJWjuIMY7YJd9WliA=",
+                            Password = "ielgB0FSNSLLACkMjvxzfQ==:7mutPpiHIy9VJrl/kheOe+706DVuComkiovDEBdT530=",
                             PhoneNumber = "0383291503",
                             Role = 1,
                             Username = "admin"

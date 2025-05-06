@@ -1,4 +1,3 @@
-
 import {BookOpen} from "lucide-react"
 import {Link} from "react-router-dom";
 
@@ -63,7 +62,7 @@ const Footer = () => {
                     </div>
                 </div>
 
-                <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm">
+                <div className="border-t border-gray-700 mt-8 pt-8 text-center text-sm">
                     <p>&copy; {new Date().getFullYear()} LibraryApp. All rights reserved.</p>
                 </div>
             </div>

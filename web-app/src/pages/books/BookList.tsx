@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { BookOpen, ChevronDown, SearchIcon } from "lucide-react"
+import {BookOpen, ChevronDown, SearchIcon, Send} from "lucide-react"
 import { Category } from "../../types/Category.ts"
 import { Book } from "../../types/Book.ts"
 import {toast} from "react-toastify"
@@ -194,7 +194,7 @@ const BookList = () => {
                             />
                             <button
                                 type="submit"
-                                className="px-4 py-2 bg-blue-900 text-white rounded-r-lg hover:bg-blue-800"
+                                className="px-4 py-2 bg-green-800 text-white rounded-r-lg hover:bg-blue-900"
                             >
                                 <SearchIcon size={18} />
                             </button>
@@ -267,7 +267,7 @@ const BookList = () => {
                                                         disabled={!selectedBooks.find(b => b.id === book.id) && selectedBooks.length >= 5 || monthlyBorrowingCount >= 3}
                                                         className={`flex items-center gap-1 px-3 py-1 rounded-md text-sm
                                                         ${selectedBooks.find(b => b.id === book.id)
-                                                            ? 'bg-blue-100 text-blue-700'
+                                                            ? 'bg-blue-100 text-blue-800'
                                                             : selectedBooks.length >= 5 || monthlyBorrowingCount >= 3
                                                                 ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                                                                 : 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -316,7 +316,7 @@ const BookList = () => {
                                         <button
                                             onClick={handleBorrowSubmit}
                                             disabled={borrowLoading || selectedBooks.length === 0}
-                                            className="cursor-pointer px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                                            className="cursor-pointer px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
                                         >
                                             {borrowLoading ? 'Submitting...' : 'Submit Request'}
                                         </button>
@@ -330,10 +330,10 @@ const BookList = () => {
                             <div className="fixed top-20 right-6">
                                 <button
                                     onClick={() => setShowBorrowModal(true)}
-                                    className="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-900 flex items-center gap-2 z-1000"
+                                    className="bg-green-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-700 flex items-center gap-2 z-1000"
                                 >
-                                    <BookOpen size={20}/>
-                                    Submit Borrow Request ({selectedBooks.length})
+                                    <Send size={20}/>
+                                    Submit Borrow Requests ({selectedBooks.length})
                                 </button>
                             </div>
                         )}

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace LibraryAPI.Migrations
 {
     /// <inheritdoc />
@@ -144,9 +146,21 @@ namespace LibraryAPI.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Category",
+                columns: new[] { "Id", "Description", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("2fc5252a-5d8b-4010-9d6d-29e407dbb5d6"), "Books that involve solving a crime or uncovering secrets.", "Mystery" },
+                    { new Guid("563ed071-f65e-40b0-90d7-b334a8b7f2b3"), "Books that are based on real events and facts.", "Non-Fiction" },
+                    { new Guid("5857df09-3840-4c13-813b-c79e68b4e216"), "Books that explore futuristic concepts and advanced technologies.", "Science Fiction" },
+                    { new Guid("91dccd39-e404-446d-9471-53a9d9b07e75"), "Books that focus on romantic relationships.", "Romance" },
+                    { new Guid("d87aa1bb-8728-4583-a82b-52dc22dfbdbc"), "Books that contain magical elements and fantastical worlds.", "Fantasy" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "Id", "Address", "Email", "Name", "Password", "PhoneNumber", "Role", "Username" },
-                values: new object[] { new Guid("6f08ac64-ef82-43af-9a17-c4095397f710"), "Ba Vi, Ha Noi", "nttue03@gmail.com", "Tai Tue", "Rrje7eglyVuv7Fkdu478Dg==:3BaZrGse6J7u2/yZut+7O+AYIyAJWjuIMY7YJd9WliA=", "0383291503", 1, "admin" });
+                values: new object[] { new Guid("68949424-a4e7-4178-963a-55d3089918d2"), "Ba Vi, Ha Noi", "nttue03@gmail.com", "Tai Tue", "ielgB0FSNSLLACkMjvxzfQ==:7mutPpiHIy9VJrl/kheOe+706DVuComkiovDEBdT530=", "0383291503", 1, "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Book_CategoryId",
