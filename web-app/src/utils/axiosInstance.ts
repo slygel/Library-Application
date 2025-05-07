@@ -61,7 +61,6 @@ axiosInstance.interceptors.response.use(
                     return axios(originalRequest);
 
                 } catch (err) {
-                    console.log("Refresh Token Failed", err);
                     localStorage.removeItem("accessToken");
                     localStorage.removeItem("refreshToken");
                     isRefreshing = false;

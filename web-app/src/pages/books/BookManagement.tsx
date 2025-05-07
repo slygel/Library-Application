@@ -90,7 +90,6 @@ const BookManagement = () => {
                 toast.success(`Book "${data.title}" has been updated successfully.`)
             } else {
                 // Adding a new book
-                console.log("Formatted Data:", data.categoryId);
                 await createBook({
                     title: data.title,
                     author: data.author,

@@ -55,6 +55,5 @@ export const rejectBorrowingRequest = async (id: string) => {
 
 export const getMonthlyBorrowingCount = async () => {
     const result = await axiosInstance.get<{ count: number }>("/book-borrowing/monthly-count");
-    console.log(result);
     return result.data;
 };
