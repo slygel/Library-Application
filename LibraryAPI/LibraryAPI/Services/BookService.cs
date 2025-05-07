@@ -59,6 +59,11 @@ public class BookService : IBookService
             return Result<BookResponse>.Failure("Available must equal quantity", StatusCodes.Status400BadRequest);
         }
         
+        if (!string.IsNullOrEmpty(request.Isbn) && request.Isbn.Length > 13)
+        {
+            return Result<BookResponse>.Failure("ISBN cannot exceed 13 characters", StatusCodes.Status400BadRequest);
+        }
+        
         var book = request.ToBookAdd();
         var result = await _bookRepository.CreateAsync(book);
         

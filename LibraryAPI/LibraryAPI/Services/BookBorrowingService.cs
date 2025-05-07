@@ -186,7 +186,7 @@ public class BookBorrowingService : IBookBorrowingService
         var updatedRequest = _bookBorrowingRepository.UpdateStatus(borrowingRequest);
         var response = updatedRequest.ToBookBorrowingResponse();
 
-        // Send notification email to requestor
+        // Send notification email to requester
         await SendStatusUpdateEmailAsync(borrowingRequest);
 
         await _bookRepository.SaveChangesAsync();
